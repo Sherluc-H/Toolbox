@@ -1,0 +1,13 @@
+10
+firstname str 3 10
+lastname str 3 10   
+
+age int 18 120   
+ 
+username str 3 10
+
+email email username email com
+
+password str 5 10
+
+active_account int 1
