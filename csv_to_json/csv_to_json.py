@@ -47,7 +47,8 @@ for i in argv:
     files.append(open(i, "r"));
 
 #open the file to write to
-output_file = open("res.js", "w");
+output_filename = "res.js";
+output_file = open(output_filename, "w");
 output_file.write("const users = [");
 
 #read line by line each csv files and write each lines after a split in output_file except the first line of each csv file which are the titles of each columns
@@ -96,3 +97,4 @@ for f in files:
     f.close();
 output_file.write("]\nmodule.exports = users;");
 output_file.close();
+print("file: " + output_filename + " written");
