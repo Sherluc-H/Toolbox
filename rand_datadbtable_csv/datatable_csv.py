@@ -1,5 +1,3 @@
-#random data CSV generator from a setup file
-
 import random;
 import string;
 import sys;
@@ -9,7 +7,6 @@ def ft_char():
     return (letters[random.randint(0, 25)]);
 
 def ft_word(min, max):
-    print("creating word");
     word_len = random.randint(min, max);
     i = 0;
     word = "";
@@ -17,6 +14,9 @@ def ft_word(min, max):
         word += ft_char();
         i += 1;
     return (word);
+
+def ft_pick(l, min, max):
+    return (l[random.randint(min, max)]);
 
 def ft_number(min, max):
     return (random.randint(min, max));
@@ -83,26 +83,39 @@ def ft_check(line_list, result_list, i, data_index_save):
         line_list.append(index);
         if (not found):
             ft_raise_email_not_ok();
+    elif (data_type == "pick"):
+        if (len(line_list) < 4):
+            ft_raise_cond_arg(i);
+        if (line_list[2] == "int"):
+            j = 3;
+            while (j < len(line_list)):
+                if (not line_list[j].isnumeric()):
+                    ft_raise_not_num(i);
+                j += 1;
+        elif (line_list[2] != "str"):
+            ft_raise_data_type(i);
     else:
         ft_raise_data_type(i);
 
 def ft_add_data(line_list, result_list, data_index_save, i):
     ft_check(line_list, result_list, i, data_index_save);
     result_list.append(line_list);
-    print(result_list);
 
 #check arguments
 argc = len(sys.argv);
-if (argc < 2 or (sys.argv[1] != "setup")):
+if (argc < 2):
     print("Error wrong nb of arguments || setup file not found");
     exit(1);
+elif (argc >= 3):
+    if (sys.argv[1] == sys.argv[2]):
+        raise NameError("setup file and destination file can't be the same");
 
 #read the setup of the csv data file
 setup_file = open(sys.argv[1], "r");
 result_list = [];
 title_list = [];
 data_index_save = [];
-times = 0;
+times = 1;
 i = 0;
 for line in setup_file:
     line_list = line.split();
@@ -132,7 +145,9 @@ for title in title_list:
     i += 1;
 output_file.write("\n");
 
+#write to output_file according to the setup result_list
 i = 0;
+data = "";
 while i < times:
     k = 0
     for j in result_list:
@@ -141,14 +156,14 @@ while i < times:
         if (j[1] == "str"):
             data = ft_word(int(j[2]), int(j[3]));
             output_file.write(data);
-        if (j[1] == "int"):
+        elif (j[1] == "int"):
             data = "";
             if (len(j) == 4):
                 data = str(ft_number(int(j[2]), int(j[3])));
             elif (len(j) == 3):
                 data = j[2];
             output_file.write(data);
-        if (j[1] == "email"):
+        elif (j[1] == "email"):
             data = "";
             for l in data_index_save:
                 if (l[0] == j[5]):
@@ -158,6 +173,10 @@ while i < times:
             data += j[3];
             data += ".";
             data += j[4];
+            output_file.write(data);
+        elif (j[1] == "pick"):
+            data = "";
+            data = str(ft_pick(j, 3, len(j) - 1));
             output_file.write(data);
         for l in data_index_save:
             if (l[0] == k):

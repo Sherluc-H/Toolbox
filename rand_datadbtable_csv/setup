@@ -1,10 +1,12 @@
 10
-firstname str 3 10
-lastname str 3 10   
+first_name str 3 10
+last_name str 3 10   
 
-age int 18 120   
+age int 18 120
  
 username str 3 10
+
+test pick int 1 8 10
 
 email email username email com
 
